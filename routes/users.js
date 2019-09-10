@@ -47,6 +47,8 @@ const db = require('../models');
  * @swagger
  * /users:
  *   get:
+ *     tags: 
+ *       - Cranios
  *     description: This should return all users
  *     produces:
  *       - application/json
@@ -69,6 +71,8 @@ router.get('/', async function(req, res, next) {
  * @swagger
  * /users:
  *   post:
+ *     tags: 
+ *       - Cranios
  *     description: This should create an user
  *     produces:
  *       - application/json
