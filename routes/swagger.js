@@ -25,6 +25,8 @@ console.log('Use http://localhost:3000/swagger-ui');
  *   DefaultObj:
  *     type: object
  *     properties:
+ *       id:
+ *         type: number
  *       createdAt:
  *         type: string
  *         format: date
