@@ -1,6 +1,9 @@
-var express = require('express');
-var router = express.Router();
-const db = require('../models');
+import * as express from 'express';
+import { getRepository } from 'typeorm';
+import { User } from '../src/entity/User';
+// const db = require('../models');
+
+export const usersRouter = express.Router();
 
 /**
  * @swagger
@@ -56,8 +59,9 @@ const db = require('../models');
  *       404:
  *         description: No users found
  */
-router.get('/', async function(req, res, next) {
-  res.send(await db.User.findAll());
+usersRouter.get('/', async function(req, res, next) {
+  // res.send(await db.User.findAll());
+  res.send(await getRepository(User).find());
 });
 
 
@@ -84,9 +88,7 @@ router.get('/', async function(req, res, next) {
  *       422:
  *         description: Failed to save user
  */
-router.post('/', async function(req, res, next) {
-  const user = await db.User.create(req.body);
-  res.send(user);
+usersRouter.post('/', async function(req, res, next) {
+  // const user = await db.User.create(req.body);
+  res.send({});
 });
-
-module.exports = router;

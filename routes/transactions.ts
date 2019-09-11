@@ -1,6 +1,7 @@
-var express = require('express');
-var router = express.Router();
-const db = require('../models');
+import * as express from 'express';
+import { getRepository } from 'typeorm';
+import { Transaction } from '../src/entity/Transaction';
+export const transactionsRouter = express.Router();
 
 
 /**
@@ -47,8 +48,8 @@ const db = require('../models');
  *       404:
  *         description: Transactions not found
  */
-router.get('/', async function(req, res, next) {
-  res.send(await db.Transaction.findAll());
+transactionsRouter.get('/', async function(req, res, next) {
+  res.send(await getRepository(Transaction).find());
 });
 
 /**
@@ -75,10 +76,7 @@ router.get('/', async function(req, res, next) {
  *         description: The transactions object is invalid
  * 
  */
-router.post('/', async function(req, res, next) {
+transactionsRouter.post('/', async function(req, res, next) {
   // TODO: Implement persist logic
   res.send({});
 });
-
-
-module.exports = router;

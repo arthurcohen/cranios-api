@@ -1,6 +1,8 @@
-var express = require('express');
-var router = express.Router();
-const db = require('../models');
+import * as express from 'express';
+import { Receipt } from '../src/entity/Receipt';
+import { getRepository } from 'typeorm';
+
+export const receiptsRouter = express.Router();
 
 /**
  * @swagger
@@ -41,9 +43,6 @@ const db = require('../models');
  *       400:
  *         description: Receipts not found
  */
-router.get('/', async function(req, res, next) {
-  res.send(await db.Receipt.findAll());
+receiptsRouter.get('/', async function(req, res, next) {
+  res.send(await getRepository(Receipt).find());
 });
-
-
-module.exports = router;

@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router();
-const swaggerUi = require('swagger-ui-express');
-// const swaggerDocument = require('../config/swagger.json');
-var swaggerJsdoc = require('swagger-jsdoc');
+import * as express from 'express';
+import * as swaggerUi from 'swagger-ui-express';
+import * as swaggerJsdoc from 'swagger-jsdoc';
 
-const options = {
+export const swaggerRouter = express.Router();
+
+const options: object = {
     swaggerDefinition: {
         info: {
             title: 'Cranios API',
@@ -12,10 +12,10 @@ const options = {
             description: 'API for all backend control of Cranios mobile app ',
         },
     },
-    apis: ['routes/*.js'],
+    apis: ['routes/*.ts'],
 }
 
-const specs = swaggerJsdoc(options);
+const specs: object = swaggerJsdoc(options);
 
 console.log('Use http://localhost:3000/swagger-ui');
 
@@ -35,11 +35,9 @@ console.log('Use http://localhost:3000/swagger-ui');
  *         format: date
  */
 
-router.get('/api-docs.json', (req, res) => {
+swaggerRouter.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(specs);
 });
 
-router.use('/', swaggerUi.serve, swaggerUi.setup(specs));
-
-module.exports = router;
+swaggerRouter.use('/', swaggerUi.serve, swaggerUi.setup(specs));
