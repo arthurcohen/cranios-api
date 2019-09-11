@@ -32,12 +32,8 @@ const db = require('../models');
  *   User:
  *     allOf:
  *       - $ref: '#/definitions/NewUser'
- *       - type: object
- *         properties:
- *           createdAt:
- *             type: date
- *           updatedAt:
- *             type: date
+ *       - $ref: '#/definitions/DefaultObj'
+ *       
  */
 
 
