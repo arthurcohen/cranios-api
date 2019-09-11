@@ -17,7 +17,7 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-console.log(specs);
+console.log('Use http://localhost:3000/swagger-ui');
 
 router.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');

@@ -29,17 +29,15 @@ const db = require('../models');
  *         type: string
  *       participation:
  *         type: number
- * 
  *   User:
  *     allOf:
  *       - $ref: '#/definitions/NewUser'
- *       - properties:
- *         id:
- *           type: number
- *         createdAt:
- *           type: date
- *         updatedAt:
- *           type: date
+ *       - type: object
+ *         properties:
+ *           createdAt:
+ *             type: date
+ *           updatedAt:
+ *             type: date
  */
 
 
@@ -85,6 +83,8 @@ router.get('/', async function(req, res, next) {
  *     responses:
  *       200:
  *         description: User created
+ *         schema:
+ *           $ref: '#/definitions/User'
  *       422:
  *         description: Failed to save user
  */
