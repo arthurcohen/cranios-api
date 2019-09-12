@@ -64,6 +64,41 @@ usersRouter.get('/', async function(req, res, next) {
   res.send(await getRepository(User).find());
 });
 
+/**
+ * @swagger
+ * /users/{userId}:
+ *   get:
+ *     tags: 
+ *       - Users
+ *     description: This should return the user for a specific id
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: User id
+ *         require: true
+ *         type: number
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: User found
+ *         schema: 
+ *           $ref: '#/definitions/User'
+ *       404:
+ *         description: No user found
+ */
+usersRouter.get('/:userId', async (req, res, next) => {
+  const user = await getRepository(User)
+    .createQueryBuilder('user')
+    .leftJoin('user.transactions', 'photo')
+    .where('user.id = :userId', { userId: req.params.userId })
+    .getOne();
+
+  res.status(user ? 200 : 404);
+
+  res.send(user);
+});
+
 
 /**
  * @swagger
@@ -89,6 +124,6 @@ usersRouter.get('/', async function(req, res, next) {
  *         description: Failed to save user
  */
 usersRouter.post('/', async function(req, res, next) {
-  // const user = await db.User.create(req.body);
-  res.send({});
+  const user = await getRepository(User).save(req.body);
+  res.send(user);
 });
