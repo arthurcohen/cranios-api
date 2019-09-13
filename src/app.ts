@@ -29,5 +29,5 @@ createConnection().then(async connection => {
     app.use('/swagger-ui', swaggerRouter);
     app.use('/users', usersRouter);
     app.use('/receipts', receiptsRouter);
-    app.use('/users/:userId/transactions', transactionsRouter);
+    app.use('/transactions', transactionsRouter);
 }).catch(error => console.log(error));

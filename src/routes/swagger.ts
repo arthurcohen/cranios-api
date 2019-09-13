@@ -12,7 +12,7 @@ const options: object = {
             description: 'API for all backend control of Cranios mobile app ',
         },
     },
-    apis: ['routes/*.ts'],
+    apis: ['src/routes/*.ts'],
 }
 
 const specs: object = swaggerJsdoc(options);

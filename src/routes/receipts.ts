@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Receipt } from '../src/entity/Receipt';
+import { Receipt } from '../entity/Receipt';
 import { getRepository } from 'typeorm';
 
 export const receiptsRouter = express.Router();

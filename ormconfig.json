@@ -3,10 +3,10 @@
    "database": "dev1.db",
    "logging": true,
    "entities": [
-      "build/src/entity/**/*.js"
+      "build/entity/**/*.js"
    ],
    "migrations": [
-      "build/src/migration/**/*.js"
+      "build/migration/**/*.js"
    ],
    "subscribers": [
       "src/subscriber/**/*.ts"

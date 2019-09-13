@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { getRepository } from 'typeorm';
-import { Transaction } from '../src/entity/Transaction';
+import { Transaction } from '../entity/Transaction';
 export const transactionsRouter = express.Router();
 
 

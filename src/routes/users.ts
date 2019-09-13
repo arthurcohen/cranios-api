@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { getRepository } from 'typeorm';
-import { User } from '../src/entity/User';
+import { User } from '../entity/User';
 // const db = require('../models');
 
 export const usersRouter = express.Router();
@@ -32,6 +32,10 @@ export const usersRouter = express.Router();
  *         type: string
  *       participation:
  *         type: number
+ *       transactions: 
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/Transaction'
  *   User:
  *     allOf:
  *       - $ref: '#/definitions/NewUser'
