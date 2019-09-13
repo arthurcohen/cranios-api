@@ -1,6 +1,7 @@
 import * as express from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, Transaction } from 'typeorm';
 import { User } from '../entity/User';
+import { UserService } from '../services/userService';
 // const db = require('../models');
 
 export const usersRouter = express.Router();
@@ -128,6 +129,9 @@ usersRouter.get('/:userId', async (req, res, next) => {
  *         description: Failed to save user
  */
 usersRouter.post('/', async function(req, res, next) {
-  const user = await getRepository(User).save(req.body);
+  const user = await UserService.persistUser(req.body);
+
+  if (user.transactions) user.transactions.forEach(transaction => getRepository(Transaction).save(transaction));
+  
   res.send(user);
 });
