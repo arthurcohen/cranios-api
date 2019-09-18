@@ -66,7 +66,11 @@ export const usersRouter = express.Router();
  */
 usersRouter.get('/', async function(req, res, next) {
   // res.send(await db.User.findAll());
-  res.send(await getRepository(User).find());
+  const users = await UserService.findUser();
+
+  res.status(users.length > 0 ? 200 : 404);
+
+  res.send(users);
 });
 
 /**
@@ -93,15 +97,11 @@ usersRouter.get('/', async function(req, res, next) {
  *         description: No user found
  */
 usersRouter.get('/:userId', async (req, res, next) => {
-  const user = await getRepository(User)
-    .createQueryBuilder('user')
-    .leftJoin('user.transactions', 'photo')
-    .where('user.id = :userId', { userId: req.params.userId })
-    .getOne();
+  const user = await UserService.findUser(parseInt(req.params.userId));
 
-  res.status(user ? 200 : 404);
+  res.status((user && user[0]) ? 200 : 404);
 
-  res.send(user);
+  res.send(user[0]);
 });
 
 
@@ -130,8 +130,6 @@ usersRouter.get('/:userId', async (req, res, next) => {
  */
 usersRouter.post('/', async function(req, res, next) {
   const user = await UserService.persistUser(req.body);
-
-  if (user.transactions) user.transactions.forEach(transaction => getRepository(Transaction).save(transaction));
   
   res.send(user);
 });
