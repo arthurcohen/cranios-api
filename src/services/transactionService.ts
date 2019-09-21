@@ -21,6 +21,8 @@ export class TransactionService {
 
         const transaction = await getRepository(Transaction).save(newTransaction);
 
+        transaction.user = null;
+
         return transaction;
     }
 }

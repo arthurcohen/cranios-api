@@ -34,15 +34,15 @@ export const usersRouter = express.Router();
  *         type: string
  *       participation:
  *         type: number
- *       transactions: 
- *         type: array
- *         items:
- *           $ref: '#/definitions/Transaction'
  *   User:
  *     allOf:
  *       - $ref: '#/definitions/NewUser'
  *       - $ref: '#/definitions/DefaultObj'
- *       
+ *     properties:
+ *       transactions: 
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/Transaction'
  */
 
 

@@ -28,8 +28,6 @@ export const transactionsRouter = express.Router();
  *     properties:
  *       receipt:
  *         $ref: '#/definitions/Receipt'
- *       user:
- *         $ref: '#/definitions/User'
  */
 
 /**
