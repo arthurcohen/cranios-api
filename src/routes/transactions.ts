@@ -1,6 +1,8 @@
 import * as express from 'express';
 import { getRepository } from 'typeorm';
 import { Transaction } from '../entity/Transaction';
+import { TransactionService } from '../services/transactionService';
+import { ReceiptService } from '../services/receiptService';
 export const transactionsRouter = express.Router();
 
 
@@ -19,14 +21,15 @@ export const transactionsRouter = express.Router();
  *         type: number
  *       type:
  *         type: number
- *       receipt:
- *         $ref: '#/definitions/Receipt'
- *       user:
- *         $ref: '#/definitions/User'
  *   Transaction:
  *     allOf:
  *       - $ref: '#/definitions/NewTransaction'
  *       - $ref: '#/definitions/DefaultObj'
+ *     properties:
+ *       receipt:
+ *         $ref: '#/definitions/Receipt'
+ *       user:
+ *         $ref: '#/definitions/User'
  */
 
 /**
@@ -52,31 +55,45 @@ transactionsRouter.get('/', async function(req, res, next) {
   res.send(await getRepository(Transaction).find());
 });
 
+
 /**
  * @swagger
- * /transactions:
+ * /transactions/{transactionId}/receipts:
  *   post:
  *     tags:
- *       - Transactions
- *     description: This should persist a new transaction
+ *       - Receipts
+ *     description: This should persist a new receipt for a transaction
  *     produces: 
  *       - application/json
  *     parameters:
- *       - name: Transaction
+ *       - name: Receipt
  *         required: true
  *         in: body
  *         schema: 
- *           $ref: '#/definitions/NewTransaction'
+ *           $ref: '#/definitions/NewReceipt'
+ *       - name: transactionId
+ *         in: path
+ *         description: Transaction id
+ *         require: true
+ *         type: number
  *     responses:
  *       201: 
- *         description: Transaction successfully created
+ *         description: Receipt successfully created
  *         schema:
- *           $ref: '#/definitions/Transaction'
+ *           $ref: '#/definitions/Receipt'
  *       422:
- *         description: The transactions object is invalid
+ *         description: The receipt object is invalid
  * 
  */
-transactionsRouter.post('/', async function(req, res, next) {
-  // TODO: Implement persist logic
-  res.send({});
+transactionsRouter.post('/:transactionId/receipts', async function(req, res, next) {
+  const transaction = await TransactionService.findTransaction(parseInt(req.params.transactionId));
+
+  let receipt;
+
+  if (transaction) {
+    receipt = await ReceiptService.persistReceipt(transaction[0], req.body);
+  }
+
+  res.status(receipt ? 201 : 422);
+  res.send(receipt);
 });

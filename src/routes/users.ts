@@ -2,6 +2,7 @@ import * as express from 'express';
 import { getRepository, Transaction } from 'typeorm';
 import { User } from '../entity/User';
 import { UserService } from '../services/userService';
+import { TransactionService } from '../services/transactionService';
 // const db = require('../models');
 
 export const usersRouter = express.Router();
@@ -132,4 +133,46 @@ usersRouter.post('/', async function(req, res, next) {
   const user = await UserService.persistUser(req.body);
   
   res.send(user);
+});
+
+/**
+ * @swagger
+ * /users/{userId}/transactions:
+ *   post:
+ *     tags:
+ *       - Transactions
+ *     description: This should persist a new transaction
+ *     produces: 
+ *       - application/json
+ *     parameters:
+ *       - name: Transaction
+ *         required: true
+ *         in: body
+ *         schema: 
+ *           $ref: '#/definitions/NewTransaction'
+ *       - name: userId
+ *         in: path
+ *         description: User id
+ *         require: true
+ *         type: number
+ *     responses:
+ *       201: 
+ *         description: Transaction successfully created
+ *         schema:
+ *           $ref: '#/definitions/Transaction'
+ *       422:
+ *         description: The transactions object is invalid
+ * 
+ */
+usersRouter.post('/:userId/transactions', async function(req, res, next) {
+  const user = await UserService.findUser(parseInt(req.params.userId));
+
+  let transaction;
+
+  if (user) {
+    transaction = await TransactionService.persistTransaction(user[0], req.body);
+  }
+
+  res.status(transaction ? 201 : 422);
+  res.send(transaction);
 });

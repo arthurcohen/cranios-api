@@ -13,7 +13,7 @@ export class Transaction {
     @Column()
     type: number;
 
-    @OneToOne(type => Receipt)
+    @OneToOne(type => Receipt, receipt => receipt.transaction)
     receipt: Receipt;
 
     @ManyToOne(type => User, user => user.transactions)

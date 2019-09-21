@@ -17,6 +17,8 @@ export const receiptsRouter = express.Router();
  *         type: string
  *       status:
  *         type: number
+ *       image:
+ *         type: string
  *   Receipt:
  *     allOf:
  *       - $ref: '#/definitions/NewReceipt'
