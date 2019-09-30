@@ -3,7 +3,10 @@ import { getRepository, getConnection } from "typeorm";
 import { Transaction } from "../entity/Transaction";
 
 export class UserService {
-    static async persistUser(newUser: User): Promise<User> {      
+    static async persistUser(newUser: User): Promise<User> {    
+        
+        // security. There only exists admin via admin urls
+        newUser.admin = false;
 
         const user = await getRepository(User).save(newUser);
 
@@ -25,4 +28,15 @@ export class UserService {
 
         return users;
     }
+
+    static async findUserByUsername(username: string): Promise<User> {
+        const user = getRepository(User)
+            .createQueryBuilder('user')
+            .where('user.username = :username', {username: username})
+            .getOne();
+
+        return user;
+    }
+
+
 }

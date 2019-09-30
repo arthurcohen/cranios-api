@@ -14,6 +14,7 @@ import { receiptsRouter } from './routes/receipts';
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 import { transactionsRouter } from './routes/transactions';
+import { checkJwt } from './middlewares/checkJwt';
 
 export const app: express.Application = express();
 
@@ -24,7 +25,7 @@ createConnection().then(async connection => {
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
-    
+
     app.use('/', indexRouter);
     app.use('/swagger-ui', swaggerRouter);
     app.use('/users', usersRouter);

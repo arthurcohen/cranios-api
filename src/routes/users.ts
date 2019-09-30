@@ -1,9 +1,8 @@
 import * as express from 'express';
-import { getRepository, Transaction } from 'typeorm';
-import { User } from '../entity/User';
+import * as jwt from 'jsonwebtoken';
 import { UserService } from '../services/userService';
 import { TransactionService } from '../services/transactionService';
-// const db = require('../models');
+import { checkJwt } from '../middlewares/checkJwt';
 
 export const usersRouter = express.Router();
 
@@ -53,6 +52,8 @@ export const usersRouter = express.Router();
  *     tags: 
  *       - Users
  *     description: This should return all users
+ *     security:
+ *       - JWTAuth: []
  *     produces:
  *       - application/json
  *     responses:
@@ -65,13 +66,52 @@ export const usersRouter = express.Router();
  *       404:
  *         description: No users found
  */
-usersRouter.get('/', async function(req, res, next) {
+usersRouter.get('/', checkJwt, async function(req, res, next) {
   // res.send(await db.User.findAll());
   const users = await UserService.findUser();
 
   res.status(users.length > 0 ? 200 : 404);
 
   res.send(users);
+});
+
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     tags: 
+ *       - Users
+ *     description: This should authenticate an user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: User
+ *         required: true
+ *         in: body
+ *         schema:
+ *           $ref: '#/definitions/NewUser'
+ *     responses:
+ *       200:
+ *         description: User authenticated
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *       403:
+ *         description: Failed to save user
+ */
+usersRouter.post('/login', async (req, res, next) => {
+  const user = await UserService.findUserByUsername(req.body.username);
+  
+  let token = null;
+  let status = 403;
+
+  if (user.password === req.body.password) {
+    token = jwt.sign({user: user}, 'segredo', {expiresIn: 3600});
+    status = 200;
+  }
+
+  res.status(status);
+  res.send(token);
+
 });
 
 /**
@@ -85,7 +125,7 @@ usersRouter.get('/', async function(req, res, next) {
  *       - name: userId
  *         in: path
  *         description: User id
- *         require: true
+ *         required: true
  *         type: number
  *     produces:
  *       - application/json
@@ -153,7 +193,7 @@ usersRouter.post('/', async function(req, res, next) {
  *       - name: userId
  *         in: path
  *         description: User id
- *         require: true
+ *         required: true
  *         type: number
  *     responses:
  *       201: 

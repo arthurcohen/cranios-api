@@ -1,9 +1,9 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class firstMigration1569027784259 implements MigrationInterface {
+export class initialMigration1569882970359 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "username" varchar NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "picture" varchar NOT NULL, "city" varchar NOT NULL, "participation" integer NOT NULL, "password" varchar NOT NULL)`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "username" varchar NOT NULL, "email" varchar NOT NULL, "name" varchar NOT NULL, "picture" varchar NOT NULL, "city" varchar NOT NULL, "participation" integer NOT NULL, "password" varchar NOT NULL, "admin" boolean NOT NULL)`);
         await queryRunner.query(`CREATE TABLE "transaction" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "value" integer NOT NULL, "type" integer NOT NULL, "userId" integer)`);
         await queryRunner.query(`CREATE TABLE "receipt" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "image" varchar NOT NULL, "observation" varchar NOT NULL, "status" integer NOT NULL, "transactionId" integer, CONSTRAINT "REL_02f14371c4e1087a220b14a65c" UNIQUE ("transactionId"))`);
         await queryRunner.query(`CREATE TABLE "temporary_transaction" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "value" integer NOT NULL, "type" integer NOT NULL, "userId" integer, CONSTRAINT "FK_605baeb040ff0fae995404cea37" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION)`);

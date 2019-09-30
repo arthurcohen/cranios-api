@@ -72,7 +72,7 @@ transactionsRouter.get('/', async function(req, res, next) {
  *       - name: transactionId
  *         in: path
  *         description: Transaction id
- *         require: true
+ *         required: true
  *         type: number
  *     responses:
  *       201: 

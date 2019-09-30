@@ -4,14 +4,16 @@ import * as swaggerJsdoc from 'swagger-jsdoc';
 
 export const swaggerRouter = express.Router();
 
-const options: object = {
-    swaggerDefinition: {
-        info: {
-            title: 'Cranios API',
-            version: '1.0.0',
-            description: 'API for all backend control of Cranios mobile app ',
-        },
+const definitions: swaggerJsdoc.SwaggerDefinition = {
+    info: {
+        title: 'Cranios API',
+        version: '1.0.0',
+        description: 'API for all backend control of Cranios mobile app ',
     },
+};
+
+const options: object = {
+    swaggerDefinition: definitions,
     apis: ['src/routes/*.ts'],
 }
 
@@ -33,6 +35,12 @@ console.log('Use http://localhost:3000/swagger-ui');
  *       updatedAt:
  *         type: string
  *         format: date
+ * securityDefinitions:
+ *   JWTAuth:
+ *     type: apiKey
+ *     name: authorization
+ *     in: header
+ *     description: Authorization
  */
 
 swaggerRouter.get('/api-docs.json', (req, res) => {
