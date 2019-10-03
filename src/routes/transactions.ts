@@ -3,6 +3,8 @@ import { getRepository } from 'typeorm';
 import { Transaction } from '../entity/Transaction';
 import { TransactionService } from '../services/transactionService';
 import { ReceiptService } from '../services/receiptService';
+import { checkAdminRole } from '../middlewares/checkRoles';
+import { checkJwt } from '../middlewares/checkJwt';
 export const transactionsRouter = express.Router();
 
 
@@ -37,6 +39,8 @@ export const transactionsRouter = express.Router();
  *     tags:
  *       - Transactions
  *     description: This should return all transactions
+ *     security:
+ *       - JWTAuth: []
  *     produces:
  *       - application/json
  *     responses:
@@ -49,7 +53,7 @@ export const transactionsRouter = express.Router();
  *       404:
  *         description: Transactions not found
  */
-transactionsRouter.get('/', async function(req, res, next) {
+transactionsRouter.get('/', checkJwt, checkAdminRole, async function(req, res, next) {
   res.send(await getRepository(Transaction).find());
 });
 
@@ -61,6 +65,8 @@ transactionsRouter.get('/', async function(req, res, next) {
  *     tags:
  *       - Receipts
  *     description: This should persist a new receipt for a transaction
+ *     security:
+ *       - JWTAuth: []
  *     produces: 
  *       - application/json
  *     parameters:
@@ -83,7 +89,7 @@ transactionsRouter.get('/', async function(req, res, next) {
  *         description: The receipt object is invalid
  * 
  */
-transactionsRouter.post('/:transactionId/receipts', async function(req, res, next) {
+transactionsRouter.post('/:transactionId/receipts', checkJwt, async function(req, res, next) {
   const transaction = await TransactionService.findTransaction(parseInt(req.params.transactionId));
 
   let receipt;

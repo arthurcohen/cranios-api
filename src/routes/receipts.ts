@@ -1,6 +1,8 @@
 import * as express from 'express';
 import { Receipt } from '../entity/Receipt';
 import { getRepository } from 'typeorm';
+import { checkAdminRole } from '../middlewares/checkRoles';
+import { checkJwt } from '../middlewares/checkJwt';
 
 export const receiptsRouter = express.Router();
 
@@ -33,6 +35,8 @@ export const receiptsRouter = express.Router();
  *     tags:
  *       - Receipts
  *     description: This should return all receipts
+ *     security:
+ *       - JWTAuth: []
  *     produces:
  *       - application/json
  *     responses:
@@ -45,6 +49,6 @@ export const receiptsRouter = express.Router();
  *       400:
  *         description: Receipts not found
  */
-receiptsRouter.get('/', async function(req, res, next) {
+receiptsRouter.get('/', checkJwt, checkAdminRole, async function(req, res, next) {
   res.send(await getRepository(Receipt).find());
 });

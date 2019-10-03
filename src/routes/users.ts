@@ -2,7 +2,8 @@ import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import { UserService } from '../services/userService';
 import { TransactionService } from '../services/transactionService';
-import { checkJwt } from '../middlewares/checkJwt';
+import { checkJwt, JWT_HEADER, SECRET } from '../middlewares/checkJwt';
+import { checkAdminRole } from '../middlewares/checkRoles';
 
 export const usersRouter = express.Router();
 
@@ -66,7 +67,7 @@ export const usersRouter = express.Router();
  *       404:
  *         description: No users found
  */
-usersRouter.get('/', checkJwt, async function(req, res, next) {
+usersRouter.get('/', checkJwt, checkAdminRole, async function(req, res, next) {
   // res.send(await db.User.findAll());
   const users = await UserService.findUser();
 
@@ -105,13 +106,13 @@ usersRouter.post('/login', async (req, res, next) => {
   let status = 403;
 
   if (user.password === req.body.password) {
-    token = jwt.sign({user: user}, 'segredo', {expiresIn: 3600});
+    token = jwt.sign({user: user}, SECRET, {expiresIn: 3600});
     status = 200;
+    res.setHeader(JWT_HEADER, token);
   }
 
   res.status(status);
-  res.send(token);
-
+  res.send();
 });
 
 /**
@@ -121,6 +122,8 @@ usersRouter.post('/login', async (req, res, next) => {
  *     tags: 
  *       - Users
  *     description: This should return the user for a specific id
+ *     security:
+ *       - JWTAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -137,7 +140,7 @@ usersRouter.post('/login', async (req, res, next) => {
  *       404:
  *         description: No user found
  */
-usersRouter.get('/:userId', async (req, res, next) => {
+usersRouter.get('/:userId', checkJwt, async (req, res, next) => {
   const user = await UserService.findUser(parseInt(req.params.userId));
 
   res.status((user && user[0]) ? 200 : 404);
@@ -182,6 +185,8 @@ usersRouter.post('/', async function(req, res, next) {
  *     tags:
  *       - Transactions
  *     description: This should persist a new transaction
+ *     security:
+ *       - JWTAuth: []
  *     produces: 
  *       - application/json
  *     parameters:
@@ -204,7 +209,7 @@ usersRouter.post('/', async function(req, res, next) {
  *         description: The transactions object is invalid
  * 
  */
-usersRouter.post('/:userId/transactions', async function(req, res, next) {
+usersRouter.post('/:userId/transactions', checkJwt, async function(req, res, next) {
   const user = await UserService.findUser(parseInt(req.params.userId));
 
   let transaction;
