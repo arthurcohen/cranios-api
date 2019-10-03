@@ -7,7 +7,7 @@
       "serve": "node ./build/bin/www.js",
       "typeorm": "typeorm",
       "compile": "npm-run-all tsc serve",
-      "dev": "nodemon -e ts --exec \"npm run compile\"",
+      "dev": "nodemon -e ts --exec \"npm run compile\" --inspect",
       "migrations": "typeorm migration:generate -n ",
       "migrate": "typeorm migration:run",
       "db": "npm-run-all tsc \"migrations {1}\" tsc migrate --",
