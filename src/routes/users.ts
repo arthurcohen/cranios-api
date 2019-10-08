@@ -11,6 +11,16 @@ export const usersRouter = express.Router();
  * @swagger
  *
  * definitions:
+ *   UserLogin:
+ *     type: object
+ *     required:
+ *       - username
+ *       - password
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
  *   NewUser:
  *     type: object
  *     required:
@@ -90,7 +100,7 @@ usersRouter.get('/', checkJwt, checkAdminRole, async function(req, res, next) {
  *         required: true
  *         in: body
  *         schema:
- *           $ref: '#/definitions/NewUser'
+ *           $ref: '#/definitions/UserLogin'
  *     responses:
  *       200:
  *         description: User authenticated
