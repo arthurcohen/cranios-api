@@ -112,16 +112,14 @@ usersRouter.get('/', checkJwt, checkAdminRole, async function(req, res, next) {
 usersRouter.post('/login', async (req, res, next) => {
   const user = await UserService.findUserByUsername(req.body.username);
   
-  let token = null;
-  let status = 403;
-
   if (user.password === req.body.password) {
-    token = jwt.sign({user: user}, SECRET, {expiresIn: 3600});
-    status = 200;
+    const token = jwt.sign({user: user}, SECRET, {expiresIn: 3600});
+    res.status(200);
     res.setHeader(JWT_HEADER, token);
+    res.send(user);
   }
 
-  res.status(status);
+  res.status(403);
   res.send();
 });
 
