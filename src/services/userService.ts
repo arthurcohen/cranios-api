@@ -32,6 +32,8 @@ export class UserService {
     static async findUserByUsername(username: string): Promise<User> {
         const user = getRepository(User)
             .createQueryBuilder('user')
+            .leftJoinAndSelect('user.transactions', 'transaction')
+            .leftJoinAndSelect('transaction.receipt', 'receipt')
             .where('user.username = :username', {username: username})
             .getOne();
 
