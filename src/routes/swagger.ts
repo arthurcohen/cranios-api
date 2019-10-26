@@ -10,6 +10,7 @@ const definitions: swaggerJsdoc.SwaggerDefinition = {
         version: '1.0.0',
         description: 'API for all backend control of Cranios mobile app ',
     },
+    basePath: '/cranios'
 };
 
 const options: object = {
