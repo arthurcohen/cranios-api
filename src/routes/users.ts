@@ -4,6 +4,7 @@ import { UserService } from '../services/userService';
 import { TransactionService } from '../services/transactionService';
 import { checkJwt, JWT_HEADER, SECRET } from '../middlewares/checkJwt';
 import { checkAdminRole } from '../middlewares/checkRoles';
+import { NewsService } from '../services/newsService';
 
 export const usersRouter = express.Router();
 
@@ -223,9 +224,57 @@ usersRouter.post('/:userId/transactions', checkJwt, async function(req, res, nex
   let transaction;
 
   if (user) {
-    transaction = await TransactionService.persistTransaction(user[0], req.body);
+    req.body.user = user[0];
+
+    transaction = await TransactionService.persistTransaction(req.body);
   }
 
   res.status(transaction ? 201 : 422);
   res.send(transaction);
+});
+
+
+/**
+ * @swagger
+ * /users/{userId}/news:
+ *   post:
+ *     tags: 
+ *       - News
+ *     description: This should persist a news
+ *     security:
+ *       - JWTAuth: []
+ *     parameters:
+ *       - name: News
+ *         required: true
+ *         in: body
+ *         schema: 
+ *           $ref: '#/definitions/NewNews'
+ *       - name: userId
+ *         in: path
+ *         description: User id
+ *         required: true
+ *         type: number
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       201:
+ *         description: News created
+ *         schema:
+ *           $ref: '#/definitions/News'
+ *       422:
+ *         description: There is a problem in the news passed by.
+ */
+usersRouter.post('/:userId/news', checkJwt, checkAdminRole, async function (req, res, next) {
+  const user = await UserService.findUser(parseInt(req.params.userId));
+
+  let news;
+
+  if (user) {
+    req.body.user = user[0];
+
+    news = await NewsService.persistNews(req.body);
+  }
+
+  res.status(news ? 201 : 422);
+  res.send(news);
 });

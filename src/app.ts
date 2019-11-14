@@ -15,6 +15,7 @@ import "reflect-metadata";
 import {createConnection} from "typeorm";
 import { transactionsRouter } from './routes/transactions';
 import { checkJwt } from './middlewares/checkJwt';
+import { newsRouter } from './routes/news';
 
 export const app: express.Application = express();
 
@@ -31,4 +32,5 @@ createConnection().then(async connection => {
     app.use('/users', usersRouter);
     app.use('/receipts', receiptsRouter);
     app.use('/transactions', transactionsRouter);
+    app.use('/news', newsRouter);
 }).catch(error => console.log(error));

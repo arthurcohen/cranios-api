@@ -9,7 +9,7 @@ export class Receipt {
     @Column()
     image: string;
 
-    @Column()
+    @Column({ nullable: true })
     observation: string;
 
     @Column()

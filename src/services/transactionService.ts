@@ -1,6 +1,5 @@
 import { Transaction } from "../entity/Transaction";
 import { getRepository } from "typeorm";
-import { User } from "../entity/User";
 
 export class TransactionService {
     static async findTransaction(id?: number): Promise<Transaction[]> {
@@ -16,9 +15,7 @@ export class TransactionService {
         return transaction;
     }
 
-    static async persistTransaction(user: User, newTransaction: Transaction): Promise<Transaction> {
-        newTransaction.user = user;
-
+    static async persistTransaction(newTransaction: Transaction): Promise<Transaction> {
         const transaction = await getRepository(Transaction).save(newTransaction);
 
         transaction.user = null;

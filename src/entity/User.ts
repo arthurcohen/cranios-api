@@ -1,5 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Transaction } from './Transaction';
+import { News } from "./News";
 
 @Entity()
 export class User {
@@ -15,10 +16,10 @@ export class User {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     picture: string;
 
-    @Column()
+    @Column({ nullable: true })
     city: string;
 
     @Column()
@@ -27,9 +28,12 @@ export class User {
     @Column()
     password: string;
 
-    @Column()
+    @Column({ default: false })
     admin: boolean;
 
     @OneToMany(type => Transaction, transaction => transaction.user)
     transactions: Transaction[];
+
+    @OneToMany(type => News, news => news.user)
+    news: News[];
 }
